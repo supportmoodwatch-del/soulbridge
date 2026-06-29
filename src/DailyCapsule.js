@@ -23,9 +23,10 @@ function DailyCapsule() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    checkPlanAndLoad();
-  }, []);
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+  checkPlanAndLoad();
+}, []);
 
   const checkPlanAndLoad = async () => {
     setLoading(true);
