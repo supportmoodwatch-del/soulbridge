@@ -23,11 +23,10 @@ function DailyCapsule() {
 
   const navigate = useNavigate();
 
- // eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
+ useEffect(() => {
   checkPlanAndLoad();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
-
   const checkPlanAndLoad = async () => {
     setLoading(true);
     const user = auth.currentUser;
