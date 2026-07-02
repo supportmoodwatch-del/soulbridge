@@ -1,54 +1,55 @@
 import React from "react";
 
 function Logo({ size = 28, showTagline = false }) {
-  const height = size * 0.9;
-
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <svg
-        width={size * 1.9}
-        height={height}
-        viewBox="0 0 100 50"
+        width={size * 2.2}
+        height={size}
+        viewBox="0 0 110 50"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
+        {/* Left flat line → spike up → spike down → bridge arc (teal) */}
         <path
-          d="M2 32 L22 32 L27 18 L32 42 L38 22 C42 12 48 5 50 5"
-          stroke="var(--color-teal)"
-          strokeWidth="3.2"
+          d="M2 28 L25 28 L30 14 L35 38 L40 20 C44 8 50 3 55 3"
+          stroke="#5B9A93"
+          strokeWidth="3.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
         />
+        {/* Right bridge arc → spike down → spike up → flat line (terracotta) */}
         <path
-          d="M50 5 C52 5 58 12 62 22 L68 42 L73 18 L78 32 L98 32"
-          stroke="var(--color-terracotta)"
-          strokeWidth="3.2"
+          d="M55 3 C60 3 66 8 70 20 L75 38 L80 14 L85 28 L108 28"
+          stroke="#D9966B"
+          strokeWidth="3.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
         />
       </svg>
+
       <div>
         <div
           style={{
-            fontFamily: "var(--font-display)",
-            fontSize: size * 0.62,
+            fontFamily: "Georgia, 'Times New Roman', serif",
+            fontSize: size * 0.68,
             fontWeight: 700,
             letterSpacing: "-0.01em",
             lineHeight: 1,
           }}
         >
-          <span style={{ color: "var(--color-teal)" }}>Soul</span>
-          <span style={{ color: "var(--color-terracotta)" }}>Bridge</span>
+          <span style={{ color: "#5B9A93" }}>Soul</span>
+          <span style={{ color: "#D9966B" }}>Bridge</span>
         </div>
         {showTagline && (
           <div
             style={{
-              fontSize: size * 0.24,
+              fontSize: size * 0.26,
               color: "var(--color-text-muted)",
               letterSpacing: "0.02em",
-              marginTop: "2px",
+              marginTop: "3px",
             }}
           >
             Understand. Connect. Grow.
