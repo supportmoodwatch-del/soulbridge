@@ -1,25 +1,33 @@
 import React from "react";
 
 function Logo({ size = 28, showTagline = false }) {
+  const height = size * 0.9;
+
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <svg
-        width={size}
-        height={size}
-        viewBox="0 0 40 40"
+        width={size * 1.9}
+        height={height}
+        viewBox="0 0 100 50"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <circle cx="20" cy="20" r="19" fill="var(--color-surface)" stroke="var(--color-border)" />
         <path
-          d="M8 24C8 16 13 11 20 11C27 11 32 16 32 24"
+          d="M2 32 L22 32 L27 18 L32 42 L38 22 C42 12 48 5 50 5"
           stroke="var(--color-teal)"
-          strokeWidth="2.6"
+          strokeWidth="3.2"
           strokeLinecap="round"
+          strokeLinejoin="round"
           fill="none"
         />
-        <circle cx="8" cy="26" r="2.2" fill="var(--color-terracotta)" />
-        <circle cx="32" cy="26" r="2.2" fill="var(--color-terracotta)" />
+        <path
+          d="M50 5 C52 5 58 12 62 22 L68 42 L73 18 L78 32 L98 32"
+          stroke="var(--color-terracotta)"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
       </svg>
       <div>
         <div
@@ -28,11 +36,11 @@ function Logo({ size = 28, showTagline = false }) {
             fontSize: size * 0.62,
             fontWeight: 700,
             letterSpacing: "-0.01em",
-            color: "var(--color-text)",
             lineHeight: 1,
           }}
         >
-          SoulBridge
+          <span style={{ color: "var(--color-teal)" }}>Soul</span>
+          <span style={{ color: "var(--color-terracotta)" }}>Bridge</span>
         </div>
         {showTagline && (
           <div
