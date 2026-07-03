@@ -17,6 +17,7 @@
   --font-body: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --radius: 14px;
   --nav-height: 64px;
+  --sidebar-width: 240px;
 }
 
 * {
@@ -25,10 +26,10 @@
 
 html, body, #root {
   min-height: 100vh;
+  margin: 0;
 }
 
 body {
-  margin: 0;
   font-family: var(--font-body);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
@@ -44,12 +45,119 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---- App shell: content + bottom nav ---- */
+/* ===================== */
+/* APP SHELL             */
+/* ===================== */
+
+/* Mobile: bottom nav */
 .sb-app-shell {
   min-height: 100vh;
   padding-bottom: calc(var(--nav-height) + 20px);
 }
 
+/* Desktop: sidebar layout */
+@media (min-width: 768px) {
+  .sb-app-shell {
+    display: flex;
+    padding-bottom: 0;
+    min-height: 100vh;
+  }
+}
+
+/* ===================== */
+/* SIDEBAR (desktop only) */
+/* ===================== */
+.sb-sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .sb-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    padding: 28px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  }
+
+  .sb-sidebar-logo {
+    margin-bottom: 36px;
+    padding: 0 8px;
+  }
+
+  .sb-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .sb-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    text-align: left;
+    width: 100%;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sb-sidebar-item:hover {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .sb-sidebar-item.active {
+    background-color: var(--color-teal-soft);
+    color: var(--color-teal);
+    font-weight: 600;
+  }
+
+  .sb-sidebar-item svg {
+    flex-shrink: 0;
+  }
+
+  .sb-sidebar-bottom {
+    border-top: 1px solid var(--color-border);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+/* ===================== */
+/* MAIN CONTENT AREA     */
+/* ===================== */
+.sb-main-content {
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .sb-main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+  }
+}
+
+/* ===================== */
+/* BOTTOM NAV (mobile only) */
+/* ===================== */
 .sb-bottom-nav {
   position: fixed;
   bottom: 0;
@@ -62,8 +170,12 @@ a:hover {
   justify-content: space-around;
   align-items: center;
   z-index: 50;
-  max-width: 680px;
-  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .sb-bottom-nav {
+    display: none;
+  }
 }
 
 .sb-nav-item {
@@ -85,26 +197,29 @@ a:hover {
   color: var(--color-teal);
 }
 
-.sb-nav-icon {
-  font-size: 19px;
-  line-height: 1;
-}
-
-/* ---- Layout ---- */
+/* ===================== */
+/* PAGE LAYOUTS          */
+/* ===================== */
 .sb-page {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 28px 20px 20px;
+  padding: 32px 24px 40px;
+  max-width: 760px;
 }
 
 .sb-page-narrow {
-  max-width: 400px;
+  max-width: 420px;
   margin: 0 auto;
   min-height: 100vh;
   padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .sb-page {
+    padding: 40px 48px;
+    max-width: 100%;
+  }
 }
 
 .sb-topbar {
@@ -126,10 +241,11 @@ a:hover {
 
 .sb-back:hover {
   color: var(--color-text);
-  text-decoration: none;
 }
 
-/* ---- Typography ---- */
+/* ===================== */
+/* TYPOGRAPHY            */
+/* ===================== */
 .sb-title {
   font-family: var(--font-display);
   font-size: 26px;
@@ -139,10 +255,16 @@ a:hover {
   color: var(--color-text);
 }
 
+@media (min-width: 768px) {
+  .sb-title {
+    font-size: 32px;
+  }
+}
+
 .sb-subtitle {
   font-size: 14px;
   color: var(--color-text-muted);
-  margin: 6px 0 24px 0;
+  margin: 8px 0 28px 0;
   line-height: 1.6;
 }
 
@@ -150,23 +272,29 @@ a:hover {
   display: none;
 }
 
-/* ---- Hero banner ---- */
+/* ===================== */
+/* HERO BANNER           */
+/* ===================== */
 .sb-hero {
   background: linear-gradient(135deg, #EFE6D8 0%, #E3D8C8 50%, #D8E4DE 100%);
   border-radius: 20px;
-  padding: 26px 24px;
+  padding: 28px 28px;
   margin-bottom: 22px;
-  position: relative;
-  overflow: hidden;
 }
 
 .sb-hero-quote {
   font-family: var(--font-display);
   font-size: 19px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--color-text);
   margin: 0 0 10px 0;
   font-style: italic;
+}
+
+@media (min-width: 768px) {
+  .sb-hero-quote {
+    font-size: 22px;
+  }
 }
 
 .sb-hero-source {
@@ -175,7 +303,9 @@ a:hover {
   font-weight: 600;
 }
 
-/* ---- Buttons ---- */
+/* ===================== */
+/* BUTTONS               */
+/* ===================== */
 .sb-btn {
   display: inline-flex;
   align-items: center;
@@ -187,7 +317,7 @@ a:hover {
   font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   font-family: var(--font-body);
 }
 
@@ -243,7 +373,9 @@ a:hover {
   cursor: not-allowed;
 }
 
-/* ---- Cards ---- */
+/* ===================== */
+/* CARDS                 */
+/* ===================== */
 .sb-card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -265,13 +397,17 @@ a:hover {
   padding: 20px;
 }
 
-/* Feature card with icon circle */
 .sb-feature-card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: box-shadow 0.15s ease;
+}
+
+.sb-feature-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 .sb-feature-icon {
@@ -281,16 +417,17 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .sb-feature-icon.teal {
   background-color: var(--color-teal-soft);
+  color: var(--color-teal);
 }
 
 .sb-feature-icon.terracotta {
   background-color: var(--color-terracotta-soft);
+  color: var(--color-terracotta);
 }
 
 .sb-feature-card h3 {
@@ -333,42 +470,9 @@ a:hover {
   color: var(--color-text-muted);
 }
 
-/* ---- Stats row ---- */
-.sb-stats-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.sb-stat {
-  flex: 1;
-  text-align: center;
-}
-
-.sb-stat-icon {
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-.sb-stat-value {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.sb-stat-unit {
-  font-size: 11px;
-  color: var(--color-text-muted);
-}
-
-.sb-stat-label {
-  font-size: 11.5px;
-  color: var(--color-text-muted);
-  margin-top: 2px;
-}
-
-/* ---- Forms ---- */
+/* ===================== */
+/* FORMS                 */
+/* ===================== */
 .sb-field {
   margin-bottom: 16px;
 }
@@ -404,7 +508,9 @@ a:hover {
   margin: 4px 0 0 0;
 }
 
-/* ---- Badge ---- */
+/* ===================== */
+/* BADGE                 */
+/* ===================== */
 .sb-badge {
   padding: 4px 11px;
   border-radius: 6px;
@@ -424,7 +530,9 @@ a:hover {
   border: 1px solid var(--color-border);
 }
 
-/* ---- Chat bubbles ---- */
+/* ===================== */
+/* CHAT                  */
+/* ===================== */
 .sb-chat-window {
   flex: 1;
   overflow-y: auto;
@@ -473,7 +581,9 @@ a:hover {
   gap: 10px;
 }
 
-/* ---- Misc ---- */
+/* ===================== */
+/* MISC                  */
+/* ===================== */
 .sb-divider {
   margin: 24px 0;
   border: none;
@@ -490,20 +600,17 @@ a:hover {
   padding: 0;
 }
 
-/* ---- Mobile ---- */
-@media (max-width: 600px) {
-  .sb-page {
-    padding: 20px 16px 16px;
-  }
-  .sb-page-narrow {
-    padding: 20px;
-  }
-  input, button {
-    font-size: 16px !important;
-  }
-}
-
 html, body {
   max-width: 100%;
   overflow-x: hidden;
+}
+/* Mobile header: visible on mobile, hidden on desktop */
+.sb-mobile-header {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .sb-mobile-header {
+    display: none;
+  }
 }
