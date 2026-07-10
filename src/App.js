@@ -16,6 +16,8 @@ import EmotionalTranslator from "./EmotionalTranslator";
 import IntimacyLab from "./IntimacyLab";
 import DailyCapsule from "./DailyCapsule";
 import PrivacyPolicy from "./PrivacyPolicy";
+import Terms from "./Terms";
+import Refunds from "./Refunds";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -26,7 +28,6 @@ function App() {
       setUser(currentUser);
       setCheckingAuth(false);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -41,7 +42,12 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/refunds" element={<Refunds />} />
+
+        {/* Auth routes */}
         <Route
           path="/signup"
           element={user ? <Navigate to="/" /> : <Signup />}
@@ -50,6 +56,8 @@ function App() {
           path="/login"
           element={user ? <Navigate to="/" /> : <Login />}
         />
+
+        {/* Protected routes */}
         <Route
           path="/emotional-translator"
           element={user ? <EmotionalTranslator /> : <Navigate to="/login" />}
