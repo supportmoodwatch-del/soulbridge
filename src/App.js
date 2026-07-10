@@ -18,7 +18,7 @@ import DailyCapsule from "./DailyCapsule";
 import PrivacyPolicy from "./PrivacyPolicy";
 import Terms from "./Terms";
 import Refunds from "./Refunds";
-
+import Pricing from "./Pricing";
 function App() {
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -73,7 +73,7 @@ function App() {
         <Route
           path="/"
           element={user ? <Home /> : <Navigate to="/login" />}
-        />
+        /><Route path="/pricing" element={<Pricing />} />
       </Routes>
     </Router>
   );
