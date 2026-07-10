@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import BottomNav from "./BottomNav";
 import Sidebar from "./Sidebar";
 import { ChatIcon, HeartIcon, SparkleIcon, LockIcon, ArrowRightIcon } from "./Icons";
+import { usePaddle } from "./usePaddle";
 
 function Home() {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -14,9 +15,9 @@ function Home() {
   const [error, setError] = useState("");
   const [plan, setPlan] = useState("free");
   const [loadingPlan, setLoadingPlan] = useState(true);
-  const [upgrading, setUpgrading] = useState(false);
 
   const navigate = useNavigate();
+  const paddle = usePaddle();
 
   useEffect(() => {
     loadPlan();
@@ -33,12 +34,46 @@ function Home() {
   };
 
   const handleUpgrade = async () => {
-    setUpgrading(true);
+    if (!paddle) {
+      alert("Payment system loading, please try again in a moment.");
+      return;
+    }
+
     const user = auth.currentUser;
-    await updateDoc(doc(db, "users", user.uid), { plan: "pro" });
-    setPlan("pro");
-    setUpgrading(false);
+    if (!user) return;
+
+    paddle.Checkout.open({
+      items: [
+        {
+          priceId: process.env.REACT_APP_PADDLE_PRICE_ID,
+          quantity: 1,
+        },
+      ],
+      customer: {
+        email: user.email,
+      },
+      customData: {
+        userId: user.uid,
+      },
+      settings: {
+        successUrl: `${window.location.origin}/?upgraded=true`,
+      },
+    });
   };
+
+  // Check if user just completed payment
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("upgraded") === "true") {
+      const user = auth.currentUser;
+      if (user) {
+        updateDoc(doc(db, "users", user.uid), { plan: "pro" }).then(() => {
+          setPlan("pro");
+          window.history.replaceState({}, "", "/");
+        });
+      }
+    }
+  }, []);
 
   const handleDeleteAccount = async () => {
     setDeleting(true);
@@ -50,7 +85,9 @@ function Home() {
       navigate("/signup");
     } catch (err) {
       if (err.code === "auth/requires-recent-login") {
-        setError("For security, please log out and log back in, then try deleting your account again.");
+        setError(
+          "For security, please log out and log back in, then try deleting your account again."
+        );
       } else {
         setError("Something went wrong. Please try again.");
       }
@@ -64,7 +101,6 @@ function Home() {
 
       <div className="sb-main-content">
         <div className="sb-page">
-          {/* Mobile header (hidden on desktop) */}
           <div
             style={{
               display: "flex",
@@ -76,7 +112,11 @@ function Home() {
           >
             <Logo size={22} />
             {!loadingPlan && (
-              <span className={`sb-badge ${plan === "pro" ? "sb-badge-pro" : "sb-badge-free"}`}>
+              <span
+                className={`sb-badge ${
+                  plan === "pro" ? "sb-badge-pro" : "sb-badge-free"
+                }`}
+              >
                 {plan === "pro" ? "PRO" : "FREE"}
               </span>
             )}
@@ -87,7 +127,8 @@ function Home() {
 
           <div className="sb-hero">
             <p className="sb-hero-quote">
-              "Connection is built in the moments we choose to truly understand each other."
+              "Connection is built in the moments we choose to truly understand
+              each other."
             </p>
             <p className="sb-hero-source">— SoulBridge</p>
           </div>
@@ -95,10 +136,14 @@ function Home() {
           {!loadingPlan && plan === "free" && (
             <div className="sb-card-accent" style={{ marginBottom: "20px" }}>
               <p style={{ margin: "0 0 12px 0", fontSize: "14px" }}>
-                Upgrade to Pro for unlimited conversations and the Daily Connection Capsule.
+                Upgrade to Pro for unlimited conversations and the Daily
+                Connection Capsule — $9.99/month.
               </p>
-              <button onClick={handleUpgrade} disabled={upgrading} className="sb-btn sb-btn-warm">
-                {upgrading ? "Upgrading..." : "Upgrade to Pro"}
+              <button
+                onClick={handleUpgrade}
+                className="sb-btn sb-btn-warm"
+              >
+                Upgrade to Pro — $9.99/mo
               </button>
             </div>
           )}
@@ -116,8 +161,14 @@ function Home() {
                 <ChatIcon size={22} />
               </div>
               <h3>Emotional Translator</h3>
-              <p>Translate emotions into understanding. Explore what you feel and why.</p>
-              <button onClick={() => navigate("/emotional-translator")} className="sb-btn sb-btn-primary">
+              <p>
+                Translate emotions into understanding. Explore what you feel
+                and why.
+              </p>
+              <button
+                onClick={() => navigate("/emotional-translator")}
+                className="sb-btn sb-btn-primary"
+              >
                 Start Translating <ArrowRightIcon size={15} />
               </button>
             </div>
@@ -127,8 +178,14 @@ function Home() {
                 <HeartIcon size={22} />
               </div>
               <h3>Intimacy Lab</h3>
-              <p>Practice difficult conversations in a safe space, one scenario at a time.</p>
-              <button onClick={() => navigate("/intimacy-lab")} className="sb-btn sb-btn-warm">
+              <p>
+                Practice difficult conversations in a safe space, one scenario
+                at a time.
+              </p>
+              <button
+                onClick={() => navigate("/intimacy-lab")}
+                className="sb-btn sb-btn-warm"
+              >
                 Enter the Lab <ArrowRightIcon size={15} />
               </button>
             </div>
@@ -137,12 +194,24 @@ function Home() {
               <div className="sb-feature-icon teal">
                 <SparkleIcon size={22} />
               </div>
-              <h3 style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <h3
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
                 Daily Connection Capsule
                 {plan !== "pro" && <LockIcon size={13} />}
               </h3>
-              <p>A small task each day to help you connect with someone who matters.</p>
-              <button onClick={() => navigate("/daily-capsule")} className="sb-btn sb-btn-primary">
+              <p>
+                A small task each day to help you connect with someone who
+                matters.
+              </p>
+              <button
+                onClick={() => navigate("/daily-capsule")}
+                className="sb-btn sb-btn-primary"
+              >
                 Open Capsule <ArrowRightIcon size={15} />
               </button>
             </div>
@@ -151,20 +220,35 @@ function Home() {
           <hr className="sb-divider" />
 
           {!showConfirm ? (
-            <button onClick={() => setShowConfirm(true)} className="sb-text-link">
+            <button
+              onClick={() => setShowConfirm(true)}
+              className="sb-text-link"
+            >
               Delete my account
             </button>
           ) : (
-            <div className="sb-card" style={{ borderColor: "var(--color-danger)" }}>
+            <div
+              className="sb-card"
+              style={{ borderColor: "var(--color-danger)" }}
+            >
               <p style={{ margin: "0 0 10px 0", fontWeight: "bold" }}>
-                Are you sure? This will permanently delete your account and all your data.
+                Are you sure? This will permanently delete your account and all
+                your data.
               </p>
               {error && <p className="sb-error">{error}</p>}
               <div style={{ display: "flex", gap: "10px" }}>
-                <button onClick={handleDeleteAccount} disabled={deleting} className="sb-btn sb-btn-danger">
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  className="sb-btn sb-btn-danger"
+                >
                   {deleting ? "Deleting..." : "Yes, delete my account"}
                 </button>
-                <button onClick={() => setShowConfirm(false)} disabled={deleting} className="sb-btn sb-btn-secondary">
+                <button
+                  onClick={() => setShowConfirm(false)}
+                  disabled={deleting}
+                  className="sb-btn sb-btn-secondary"
+                >
                   Cancel
                 </button>
               </div>
